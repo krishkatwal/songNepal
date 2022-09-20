@@ -30,13 +30,13 @@ const addSong = async (req,res) => {
 const getSong = async (req,res) => {
     try {
         // input song name in json
-        const {id: songID } = req.params
-        
-        const song = await Song.findOne({ _id: songID})
+        const {name: songName } = req.params
+        console.log(req.params)
+        const song = await Song.findOne(JSON.parse((JSON.stringify({name: songName})).toLowerCase()))  // if nothing found then null
        
         // if name doesnot match then ...to catch that type of error
         if(!song){
-            return res.status(404).json({ msg: `No song with name ${id}`})
+            return res.status(404).json({ msg: `No song with name ${songName}`})
         }
         res.status(200).json({ song})
     } catch (error) {
@@ -47,13 +47,13 @@ const getSong = async (req,res) => {
 // Update song in controller
 const editSong = async (req,res) => {
    try {
-    const {id: songID} = req.params
-    const song = await Song.findOneAndUpdate({_id: songID},req.body,  {
+    const {name : songName} = req.params
+    const song = await Song.findOneAndUpdate({name : songName}, req.body,  {
         new:true,
         runValidators:true,
     })
     if(!song){
-        return res.status(404).json({ msg: `No song with id : ${songID}`})
+        return res.status(404).json({ msg: `No song with name: ${songName}`})
     }
 
     res.status(200).json( song )  // json pathako tai req.body ho
@@ -66,10 +66,11 @@ const editSong = async (req,res) => {
 const deleteSong = async (req,res) => {
     try {
        // delete by id
-       const {id: songID} = req.params
-       const song = await Song.findOneAndDelete({_id:songID})
+       const { name: songName }  = req.params
+      
+       const song = await Song.findOneAndDelete({name: songName } )
        if(!song){
-        return res.status(404).json({ msg: `No song with id: ${songID}`})
+        return res.status(404).json({ msg: `No song with name: ${songName}`})
        }
     res.status(200).json(song)
     } catch (error) {

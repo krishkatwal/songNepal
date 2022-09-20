@@ -5,10 +5,10 @@ const {getAllSongs, addSong, getSong,editSong, deleteSong} = require('../control
 router.route('/').get(getAllSongs).post(addSong)
 
 // get method with querying using name
-// router.route('/:name').get(getSong)
+router.route('/:name').get(getSong).put(editSong).delete(deleteSong)
 
 // update song and delete
-router.route('/:id').put(editSong).delete(deleteSong).get(getSong)
+// router.route('/:id')
 
 
 
